@@ -1,7 +1,7 @@
 //single selection
 //multiple selection
 
-import { useState } from "react";
+import React, { useState } from "react";
 import data from "./data";
 import "./styles.css";
 
@@ -14,54 +14,48 @@ export default function Accordian() {
     setSelected(getCurrentId === selected ? null : getCurrentId);
   }
 
-  function handleMultiSelection(getCurrentId) {
-    let cpyMutiple = [...multiple];
-    const findIndexOfCurrentId = cpyMutiple.indexOf(getCurrentId);
+  function handleMultipleSelection(getCurrentId) {
 
-    console.log(findIndexOfCurrentId);
-    if (findIndexOfCurrentId === -1) cpyMutiple.push(getCurrentId);
-    else cpyMutiple.splice(findIndexOfCurrentId, 1);
+    let cpyMultiple = [...multiple];
+    const findIndexOdCurrentId = cpyMultiple.indexOf(getCurrentId);
 
-    setMultiple(cpyMutiple);
+    if(findIndexOdCurrentId === -1) cpyMultiple.push(getCurrentId);
+    else cpyMultiple.splice(findIndexOdCurrentId, 1);
+    setMultiple(cpyMultiple);
   }
 
-  console.log(selected, multiple);
+  console.log(selected);
+
   return (
-    <div className="acc-wrapper">
+    <div className="wrapper">
       <button onClick={() => setEnableMultiSelection(!enableMultiSelection)}>
-        Enable Multi Selection
+        Enable Multiple Selection
       </button>
       <div className="accordian">
-        {data && data.length > 0 ? (
-          data.map((dataItem) => (
-            <div className="item">
-              <div
-                onClick={
-                  enableMultiSelection
-                    ? () => handleMultiSelection(dataItem.id)
-                    : () => handleSingleSelection(dataItem.id)
-                }
-                className="title"
-              >
-                <h3>{dataItem.question}</h3>
-                <span>+</span>
+        {data && data.length > 0
+          ? data.map((dataItem) => (
+              <div className="item">
+                <div
+                  onClick={
+                    enableMultiSelection
+                      ? () => handleMultipleSelection(dataItem.id)
+                      : () => handleSingleSelection(dataItem.id)
+                  }
+                  className="title"
+                >
+                  <h3>{dataItem.question}</h3>
+                  <span>+</span>
+                </div>
+                {enableMultiSelection
+                  ? multiple.indexOf(dataItem.id) !== -1 && (
+                      <div className="content">{dataItem.answer}</div>
+                    )
+                  : selected === dataItem.id && (
+                      <div className="content">{dataItem.answer}</div>
+                    )}
               </div>
-              {enableMultiSelection
-                ? multiple.indexOf(dataItem.id) !== -1 && (
-                    <div className="acc-content ">{dataItem.answer}</div>
-                  )
-                : selected === dataItem.id && (
-                    <div className="acc-content ">{dataItem.answer}</div>
-                  )}
-              {/* {selected === dataItem.id ||
-              multiple.indexOf(dataItem.id) !== -1 ? (
-                <div className="content">{dataItem.answer}</div>
-              ) : null} */}
-            </div>
-          ))
-        ) : (
-          <div>No data found !</div>
-        )}
+            ))
+          : "No data found"}
       </div>
     </div>
   );
